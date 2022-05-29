@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.mapper.TestpaperMapper">
+    <resultMap id="TestpaperVO" type="com.exam.VO.TestpaperVO">
+        <result column="tp_id" property="tpId" />
+        <result column="tp_name"  property="tpName" />
+        <result column="tp_type"  property="tpType" />
+        <result column="exam_time"  property="examTime" />
+        <result column="exam_password"  property="examPassword" />
+        <result column="exam_length"  property="examLength" />
+        <result column="sub_id" property="subId" />
+        <result column="tea_id" property="teaId" />
+        <result column="files" property="files"/>
+    </resultMap>
+
+    <resultMap id="ScoreVO" type="com.exam.VO.ScoreVO">
+        <result column="tp_id" property="tpId" />
+        <result column="tp_name"  property="tpName" />
+        <result column="exam_time"  property="examTime" />
+        <result column="exam_length"  property="examLength" />
+        <result column="sub_id" property="subId" />
+        <result column="stu_id" property="stuId" />
+    </resultMap>
+    <!-- <select id="getTestBanklist" resultMap="TestBankVO">
+         select tea_name,test_date,sub_name,test_type,test_content,option_a,option_b,option_c,option_d,answer from exam.testbank tb, exam.teacher t, exam.subject s where tb.tea_id = t.tea_id and tb.sub_id = s.sub_id
+     </select>-->
+
+    <select id="getTestpaper" resultMap="TestpaperVO">
+        select tp_id, tp_name, tp_type, exam_time, exam_length, exam_password, s.sub_id, tea_id, sub_name,exam_total,files
+        from testpaper tr, subject s
+        where tr.sub_id = s.sub_id
+        <if test="ew.emptyOfWhere == false">
+           and ${ew.SqlSegment}
+        </if>
+
+    </select>
+
+    <select id="getScore" resultMap="ScoreVO">
+        select  DISTINCT tp.tp_id, tp_name, exam_time, exam_length, s.sub_id, sub_name,exam_total,a.stu_id,tp.files
+        from testpaper tp, subject s, answersheet a
+        where tp.sub_id = s.sub_id and a.tp_id = tp.tp_id
+        <if test="ew.emptyOfWhere == false">
+           and ${ew.SqlSegment}
+        </if>
+    </select>
+</mapper>

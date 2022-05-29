@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.mapper.StudentMapper">
+
+    <resultMap id="StudentVO" type="com.exam.VO.StudentVO">
+        <result column="stu_id" property="stuId"/>
+        <result column="stu_state" property="stuState"/>
+        <result column="stu_username" property="stuUsername"/>
+        <result column="stu_password" property="stuPassword"/>
+        <result column="stu_name" property="stuName"/>
+        <result column="col_name" property="colName"/>
+        <result column="major_id" property="majorId"/>
+    </resultMap>
+
+    <select id="getStudentlist" resultMap="StudentVO">
+        select s.stu_id, s.stu_username,s.stu_password, s.stu_name, c.col_name,c.col_id, m.major_name,m.major_id,s.stu_state
+        from student s,major m,college c
+        where s.major_id = m.major_id and c.col_id = m.col_id
+        <if test="ew.emptyOfWhere == false">
+            and ${ew.sqlSegment}
+        </if>
+    </select>
+</mapper>

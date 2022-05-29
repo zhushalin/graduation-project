@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.mapper.AnswersheetMapper">
+    <select id="getExamInfo" parameterType="int" resultType="com.exam.VO.ExamInfoVO">
+        SELECT count(*) as `total`,
+               (SELECT count(*)
+                FROM `answersheet`
+                where tp_id = #{tp_id}
+                  and test_id = a.test_id
+                  and stu_score > 0) as correct_count,
+               a.test_id as test_id,
+               a.tp_id,
+               tp.tp_name,
+               tb.test_content
+        FROM `answersheet` a, testpaper tp, testbank tb
+        where a.tp_id = #{tp_id} and a.tp_id = tp.tp_id and a.test_id = tb.test_id
+        group by a.test_id
+    </select>
+</mapper>

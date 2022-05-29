@@ -1,0 +1,32 @@
+server:
+  port: 8085
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT-8
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://119.3.164.133:3306/exam?userSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+  thymeleaf:
+#    prefix: classpath:/views/ #调整页面路径
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML # 关闭严格html5校验的方法
+  mvc:
+    static-path-pattern: /static/**
+# 静态文件路径，根据项目路径改变
+upload:
+  path: E:\develop\git\other\online_exam_system_new\learningMaterials\
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**Mapper.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+

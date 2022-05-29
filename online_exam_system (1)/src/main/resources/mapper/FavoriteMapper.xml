@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.mapper.FavoriteMapper">
+
+    <resultMap id="FavoriteVO" type="com.exam.VO.FavoriteVO">
+        <result column="id" property="id"/>
+        <result column="student_id" property="studentId"/>
+        <result column="type" property="type"/>
+        <result column="file_id" property="fileId"/>
+        <result column="question_id" property="questionId"/>
+    </resultMap>
+
+    <select id="getAllFavoriteFile" resultMap="FavoriteVO">
+        select f.*,lf.name
+        from favorite f, student s, learning_file lf
+        where f.student_id = s.id and f.file_id = lf.id
+        <if test="ew.emptyOfWhere == false">
+            and ${ew.sqlSegment}
+        </if>
+    </select>
+</mapper>

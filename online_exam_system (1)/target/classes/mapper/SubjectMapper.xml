@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.mapper.SubjectMapper">
+
+    <resultMap id="SubjectVO" type="com.exam.VO.SubjectVO">
+        <result column="sub_id" jdbcType="INTEGER" property="subId"/>
+        <result column="sub_name" jdbcType="VARCHAR" property="subName"/>
+        <result column="major_name" jdbcType="TIMESTAMP" property="majorName" />
+    </resultMap>
+
+    <select id="getSubjectlist" resultMap="SubjectVO" >
+        select sub_id,major_name,sub_name
+        from subject s, major m
+        where s.major_id = m.major_id
+        <if test="ew.emptyOfWhere == false">
+            and ${ew.sqlSegment}
+        </if>
+    </select>
+
+</mapper>

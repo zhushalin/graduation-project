@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.mapper.TestbankMapper">
+    <resultMap id="TestBankVO" type="com.exam.VO.TestBankVO">
+        <!--       <result column="tea_Name" jdbcType="VARCHAR" property="teaName"/>
+               <result column="tea_username" jdbcType="VARCHAR" property="teaUsername"/>-->
+        <result column="test_date" property="testDate"/>
+        <result column="sub_name" jdbcType="VARCHAR" property="subName"/>
+        <result column="test_type" jdbcType="INTEGER" property="testType"/>
+        <result column="test_content" jdbcType="VARCHAR" property="testContent"/>
+        <result column="option_a" jdbcType="VARCHAR" property="optionA"/>
+        <result column="option_b" jdbcType="VARCHAR" property="optionB"/>
+        <result column="option_c" jdbcType="VARCHAR" property="optionC"/>
+        <result column="option_d" jdbcType="VARCHAR" property="optionD"/>
+        <result column="answer" jdbcType="VARCHAR" property="answer"/>
+        <result column="score" javaType="INTEGER" property="score"/>
+    </resultMap>
+
+    <resultMap id="Answersheet" type="com.exam.entity.Answersheet">
+        <result column="stu_answer" property="stuAnswer"/>
+    </resultMap>
+
+    <!-- <select id="getTestBanklist" resultMap="TestBankVO">
+         select tea_name,test_date,sub_name,test_type,test_content,option_a,option_b,option_c,option_d,answer from exam.testbank tb, exam.teacher t, exam.subject s where tb.tea_id = t.tea_id and tb.sub_id = s.sub_id
+     </select>-->
+
+    <select id="getTestBanklist" resultMap="TestBankVO">
+        select tea_id, test_id, test_date,s.sub_id, sub_name,
+        test_type,test_content,option_a,option_b,option_c,option_d,answer,tb.score
+        from testbank tb, subject s
+        where tb.sub_id = s.sub_id
+        <if test="ew.emptyOfWhere == false">
+            and ${ew.sqlSegment}
+        </if>
+    </select>
+
+    <select id="getTestBanklist1" resultMap="TestBankVO">
+        select tea_id, test_id, test_date,s.sub_id, sub_name,
+        test_type,test_content,option_a,option_b,option_c,option_d,answer
+        from testbank tb, subject s
+        where tb.sub_id = s.sub_id
+        and test_id in (select test_id from tplist where tp_id = #{tpId})
+        <if test="ew.emptyOfWhere == false">
+            and ${ew.sqlSegment}
+        </if>
+    </select>
+
+    <select id="getTplistTest" resultMap="TestBankVO">
+        select tea_id,
+               test_id,
+               test_date,
+               test_type,
+               test_content,
+               option_a,
+               option_b,
+               option_c,
+               option_d,
+               answer
+        from testbank tb
+        where test_id
+                  in (select test_id
+                      from tplist
+                      where tp_id = #{tpId})
+        ORDER BY test_type
+    </select>
+
+    <select id="getExamTest" resultMap="Answersheet">
+        select test_id, stu_answer, stu_score
+        from answersheet
+        where stu_id = #{stuId}
+          and tp_id = #{tpId}
+          and test_id IN (SELECT test_id FROM exam.tplist WHERE tp_id = #{tpId})
+    </select>
+
+</mapper>

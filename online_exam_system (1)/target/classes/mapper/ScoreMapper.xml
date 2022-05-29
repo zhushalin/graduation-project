@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.mapper.ScoreMapper">
+    <resultMap id="ScoreVO" type="com.exam.VO.ScoreVO">
+        <result column="tp_id" property="tpId"/>
+        <result column="tp_name" property="tpName"/>
+        <result column="exam_time" property="examTime"/>
+        <result column="exam_length" property="examLength"/>
+        <result column="sub_id" property="subId"/>
+        <result column="stu_id" property="stuId"/>
+    </resultMap>
+
+    <select id="getScore" resultMap="ScoreVO">
+        select s.*,s.sub_score as exam_score,stu.stu_name,tp.tp_name,tp.exam_time,tp.exam_length,tp.exam_total,su.sub_name,tp.files
+        from score s, subject su, testpaper tp,student stu
+        where s.tp_id = tp.tp_id and s.sub_id = su.sub_id and s.stu_id = stu.stu_id
+        <if test="ew.emptyOfWhere == false">
+            and ${ew.SqlSegment}
+        </if>
+    </select>
+</mapper>
