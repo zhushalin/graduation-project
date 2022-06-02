@@ -5,15 +5,9 @@ import com.exam.DTO.AnswersheetDTO;
 import com.exam.VO.OnlineExam.TBVO;
 import com.exam.common.Msg;
 import com.exam.common.ResultUtil;
-import com.exam.entity.Answersheet;
-import com.exam.entity.Score;
-import com.exam.entity.Testbank;
-import com.exam.entity.Testpaper;
+import com.exam.entity.*;
 import com.exam.mapper.TestbankMapper;
-import com.exam.service.AnswersheetService;
-import com.exam.service.ScoreService;
-import com.exam.service.TestbankService;
-import com.exam.service.TestpaperService;
+import com.exam.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +35,8 @@ public class AnswersheetController {
     TestpaperService testpaperService;
     @Autowired
     TestbankMapper testbankMapper;
+    @Autowired
+    WrongQuestionService wrongQuestionService;
     //查询所有答题卡
     @RequestMapping("/getAnswersheet")
     public Msg getAnswersheet(){
@@ -94,6 +90,24 @@ public class AnswersheetController {
         return ResultUtil.success();
     }
 
+    //添加答题卡
+    @RequestMapping("/tijiao")
+    public Msg tijiao(@RequestBody AnswersheetDTO answersheetDTO) throws ParseException {
+        SimpleDateFormat sdf =  new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
+        System.out.println(answersheetDTO);
+        List<TBVO> answerList = answersheetDTO.getAnswerList();
+        double sum = 0;
+        for (TBVO tbvo : answerList) {
+            Answersheet answersheet = new Answersheet();
+            //题目类型不为问答题时，给出分数
+            if (tbvo.getTestType() != 4){
+                setScore2(tbvo, answersheet, answersheetDTO);
+                sum += answersheet.getStuScore();
+            }
+        }
+        return ResultUtil.success(sum);
+    }
+
     public Void setScore(TBVO tbvo,Answersheet answersheet,AnswersheetDTO answersheetDTO){
         //将提交的答案分割成数组
         /*String[] split = tbvo.getAnswer().split("");*/
@@ -120,7 +134,47 @@ public class AnswersheetController {
             }
         }else {
             answersheet.setIsAsk(1);
-            if (isCorrect(tbvo.getStuAnswer(), testbyId.getAnswer())){
+            if (isCorrect(tbvo.getAnswer(), testbyId.getAnswer())){
+                answersheet.setStuScore(testbyId.getScore());
+            }else {
+                answersheet.setStuScore(0);
+            }
+        }
+        return null;
+    }
+
+
+    public Void setScore2(TBVO tbvo,Answersheet answersheet,AnswersheetDTO answersheetDTO){
+        //将提交的答案分割成数组
+        /*String[] split = tbvo.getAnswer().split("");*/
+        //获取答案
+        QueryWrapper<Testbank> wrapper = new QueryWrapper<>();
+//        wrapper.inSql("test_id","select test_id from tplist where  tp_id = "+answersheetDTO.getTpId());
+        wrapper.eq("test_id",tbvo.getTestId());
+        Testbank testbyId = testbankService.getOne(wrapper);
+        //将提交的答案分割成数组进行排序
+        /*String[] split1 = testbyId.getAnswer().split("");*/
+        /*Arrays.sort(split1);*/
+        System.out.println("===============");
+        System.out.println("学生答案："+tbvo.getAnswer());
+        System.out.println("正确答案："+testbyId.getAnswer());
+        System.out.println("================");
+        if (tbvo.getTestType() != 2){
+            //题目类型不为多选题时
+            if (tbvo.getAnswer().equals(testbyId.getAnswer())){
+                answersheet.setStuScore(testbyId.getScore());
+                System.out.println("对");
+            }else{
+                answersheet.setStuScore(0);
+                System.out.println("错");
+                WrongQuestion wrongQuestion = new WrongQuestion();
+                wrongQuestion.setStudentId(answersheetDTO.getStuId());
+                wrongQuestion.setQuestionId(tbvo.getTestId()+"");
+                wrongQuestionService.save(wrongQuestion);
+            }
+        }else {
+            answersheet.setIsAsk(1);
+            if (isCorrect(tbvo.getAnswer(), testbyId.getAnswer())){
                 answersheet.setStuScore(testbyId.getScore());
             }else {
                 answersheet.setStuScore(0);

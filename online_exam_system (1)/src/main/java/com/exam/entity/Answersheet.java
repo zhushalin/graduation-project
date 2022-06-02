@@ -56,4 +56,6 @@ public class Answersheet implements Serializable {
      */
     private Integer isAsk;
 
+    private String atype;
+
 }

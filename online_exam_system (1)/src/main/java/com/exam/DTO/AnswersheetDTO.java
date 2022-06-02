@@ -19,4 +19,5 @@ public class AnswersheetDTO implements Serializable {
     private Integer leaveTimes;
     //作答时间
     private String startTime;
+    private String atype;
 }

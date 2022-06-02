@@ -17,6 +17,10 @@ public class MenuUtils {
     private static MenuDTO Notice = new MenuDTO("Notice","平台公告","el-icon-trophy","","",null);
     private static MenuDTO NoticeQuery = new MenuDTO("Notice","查看公告","el-icon-trophy","/notice/query","notice/query",null);
 
+    private static MenuDTO File = new MenuDTO("File","课件资料","el-icon-trophy","","",null);
+    private static MenuDTO FileManage = new MenuDTO("FileManage","课件管理","el-icon-trophy","/file/manage","file/manage",null);
+    private static MenuDTO FileManage2 = new MenuDTO("FileManage_zl","资料管理","el-icon-trophy","/file/manage_zl","file/manage_zl",null);
+
     private static MenuDTO DescriptionManage = new MenuDTO("DescriptionManage","平台简介管理","el-icon-trophy","","",null);
     private static MenuDTO Description = new MenuDTO("DescriptionManage","平台简介","el-icon-trophy","/descripTion/manage","descripTion/desManage",null);
 
@@ -44,6 +48,17 @@ public class MenuUtils {
     private static MenuDTO EATpList = new MenuDTO("EATpList","试卷管理","el-icon-rank","/examAdmin/TpList","examAdmin/TpList",null);
     private static MenuDTO EAScore = new MenuDTO("EAScore","成绩统计","el-icon-orange","/examAdmin/ScoreAdmin","examAdmin/ScoreAdmin",null);
 
+    private static MenuDTO 练习 = new MenuDTO("ExamAdmin_lx","习题练习","el-icon-help","","",null);
+    private static MenuDTO EATestBank2 = new MenuDTO("OnlineExam_lx","随机练习","el-icon-document-copy","/OnlineExam_lx","OnlineExam_lx",null);
+    private static MenuDTO EATestBank_zn = new MenuDTO("OnlineExam_zn","推荐练习","el-icon-document-copy","/OnlineExam_zn","OnlineExam_zn",null);
+
+    private static MenuDTO 错题集 = new MenuDTO("ExamAdmin_ctj","错题集","el-icon-help","","",null);
+    private static MenuDTO TestBank_ctj = new MenuDTO("EATestBank_CTJ","错题集","el-icon-document-copy","/examAdmin/TestBank_ctj","examAdmin/TestBank_ctj",null);
+
+    private static MenuDTO 习题收藏 = new MenuDTO("ExamAdmin_sc","习题收藏","el-icon-help","","",null);
+    private static MenuDTO TestBank_Sc = new MenuDTO("EATestBank_SC","习题收藏","el-icon-document-copy","/examAdmin/TestBank_sc","examAdmin/TestBank_sc",null);
+
+
     private static MenuDTO UserManager = new MenuDTO("UserManager","用户管理","el-icon-user","","",null);
     private static MenuDTO Teacher = new MenuDTO("Teacher","教师管理","el-icon-s-promotion","/userManager/Teacher","userManager/Teacher",null);
     private static MenuDTO Student = new MenuDTO("Student","学生管理","el-icon-s-promotion","/userManager/Student","userManager/Student",null);
@@ -55,6 +70,9 @@ public class MenuUtils {
     public static void CommonMenu(){
         ArrayList<MenuDTO> list1 = new ArrayList<>();
         list1.add(Exam);
+//        list1.add(EATestBank2);
+//        list1.add(TestBank_ctj);
+//        list1.add(TestBank_Sc);
         ExamManage.setChildren(list1);
 
         ArrayList<MenuDTO> list2 = new ArrayList<>();
@@ -111,6 +129,25 @@ public class MenuUtils {
         ArrayList<MenuDTO> list11 = new ArrayList<>();
         list11.add(ScoreRelease1);
         ScoreRelease.setChildren(list11);
+
+        ArrayList<MenuDTO> list14 = new ArrayList<>();
+        list14.add(FileManage);
+        list14.add(FileManage2);
+        File.setChildren(list14);
+
+        ArrayList<MenuDTO> list15 = new ArrayList<>();
+        list15.add(EATestBank2);
+        list15.add(EATestBank_zn);
+        练习.setChildren(list15);
+
+        ArrayList<MenuDTO> list16 = new ArrayList<>();
+        list16.add(TestBank_ctj);
+        错题集.setChildren(list16);
+
+        ArrayList<MenuDTO> list17 = new ArrayList<>();
+        list17.add(TestBank_Sc);
+        习题收藏.setChildren(list17);
+
     }
     //管理员目录
     public static ArrayList<MenuDTO> AdminMenu(){
@@ -126,10 +163,11 @@ public class MenuUtils {
     //教师目录
     public static ArrayList<MenuDTO> TeacherMenu(){
         ArrayList<MenuDTO> list = new ArrayList<>();
-        ExamAdmin.getChildren().get(0).setTitle("我的题库");
-        ExamAdmin.getChildren().get(1).setTitle("我的试卷");
+        ExamAdmin.getChildren().get(0).setTitle("题库信息");
+        ExamAdmin.getChildren().get(1).setTitle("试卷信息");
         list.add(ExamAdmin);
 //        list.add(EAScore);
+        list.add(File);
         list.add(Notice);
         list.add(ScoreRelease);
         list.add(Supervision);
@@ -144,6 +182,10 @@ public class MenuUtils {
         list.add(ScoreQuery);
         list.add(StuInfoManage);
         list.add(Notice);
+        list.add(File);
+        list.add(练习);
+        list.add(错题集);
+        list.add(习题收藏);
         return list;
     }
 }

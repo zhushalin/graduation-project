@@ -26,5 +26,8 @@ public class TestBankVO implements Serializable{
     private String answer;
     private Integer score;
     private String stringAnswer;
+    private String status;
+    private String type;
+    private String scid;
     private char[] answerChars;
 }

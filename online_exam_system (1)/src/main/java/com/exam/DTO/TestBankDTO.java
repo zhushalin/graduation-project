@@ -12,6 +12,7 @@ public class TestBankDTO implements Serializable {
     private Integer tpId;
     private Integer teaId;
     private Integer subId;
+    private Integer stuId;
     private Integer testType;
     private String testContent;
     private String optionA;
@@ -20,7 +21,10 @@ public class TestBankDTO implements Serializable {
     private String optionD;
     private char[] answer;
     private String stringAnswer;
+    private String type;
     private Integer score;
     private Integer current;
+
+    private String status;
     private Integer size;
 }

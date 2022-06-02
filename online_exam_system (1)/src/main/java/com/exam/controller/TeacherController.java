@@ -101,6 +101,9 @@ public class TeacherController {
             if (!newPsw.equals(newPsw2)){
                 return ResultUtil.error(400,"新密码两次输入不一致");
             }
+            if(oldPsw.equals(newPsw2)){
+                return ResultUtil.error(400,"新密码与旧密码不能一致");
+            }
             teacher.setTeaPassword(newPsw);
             int result = teacherService.updateTeacher(teacher);
             if (result>0){

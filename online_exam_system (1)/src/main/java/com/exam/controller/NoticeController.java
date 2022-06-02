@@ -51,8 +51,8 @@ public class NoticeController {
      * @return
      */
     @RequestMapping("/add")
-    public Msg add(@RequestBody Notice notice, int adminId){
-        notice.setAdminId(adminId);
+    public Msg add(@RequestBody Notice notice){
+       // notice.setAdminId(adminId);
         notice.setCreateTime(new Date());
         int result = noticeService.add(notice);
         if (result>0){

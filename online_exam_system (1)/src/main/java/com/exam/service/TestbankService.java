@@ -20,6 +20,10 @@ public interface TestbankService extends IService<Testbank> {
 
     List<TestBankVO> getTestBanklist(TestBankDTO testBankDTO);
 
+    List<TestBankVO> getTestBanklistCtj(TestBankDTO testBankDTO);
+
+    List<TestBankVO> getTestbankSc(TestBankDTO testBankDTO);
+
     Msg getTestBanklist1(TestBankDTO testBankDTO);
 
     Msg aboutTplist(TestBankDTO testBankDTO);

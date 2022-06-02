@@ -63,8 +63,71 @@ public class TestbankServiceImpl extends ServiceImpl<TestbankMapper, Testbank> i
             if (testBankDTO.getTestId()!=null){
                 wrapper.eq("tb.test_id",testBankDTO.getTestId());
             }
+            if (testBankDTO.getType()!=null){
+                wrapper.eq("tb.type",testBankDTO.getType());
+            }
         }
         List<TestBankVO> testBanklist = testbankMapper.getTestBanklist(wrapper);
+        for (TestBankVO testBankVO:testBanklist) {
+            testBankVO.setStringAnswer(testBankVO.getAnswer());
+            testBankVO.setAnswerChars(testBankVO.getAnswer().toCharArray());
+        }
+        System.out.println(testBanklist);
+        return testBanklist;
+    }
+
+    @Override
+    public List<TestBankVO> getTestBanklistCtj(TestBankDTO testBankDTO) {
+        QueryWrapper<TestBankVO> wrapper = new QueryWrapper<>();
+        if (testBankDTO!=null){
+            if (testBankDTO.getSubId()!=null){
+                wrapper.eq("s.sub_id",testBankDTO.getSubId());
+            }
+            if (testBankDTO.getTestType()!=null){
+                wrapper.eq("tb.test_type",testBankDTO.getTestType());
+            }
+            if (testBankDTO.getTeaId()!=null){
+                wrapper.eq("tb.tea_id",testBankDTO.getTeaId());
+            }
+            if (StringUtils.isNotBlank(testBankDTO.getTestContent())){
+                wrapper.like("tb.test_content",testBankDTO.getTestContent());
+            }
+            //编辑时根据获取的id搜索
+            if (testBankDTO.getTestId()!=null){
+                wrapper.eq("tb.test_id",testBankDTO.getTestId());
+            }
+        }
+        List<TestBankVO> testBanklist = testbankMapper.getTestBanklistCtj(wrapper);
+        for (TestBankVO testBankVO:testBanklist) {
+            testBankVO.setStringAnswer(testBankVO.getAnswer());
+            testBankVO.setAnswerChars(testBankVO.getAnswer().toCharArray());
+        }
+        System.out.println(testBanklist);
+        return testBanklist;
+    }
+
+    @Override
+    public List<TestBankVO> getTestbankSc(TestBankDTO testBankDTO) {
+        QueryWrapper<TestBankVO> wrapper = new QueryWrapper<>();
+        if (testBankDTO!=null){
+            if (testBankDTO.getSubId()!=null){
+                wrapper.eq("s.sub_id",testBankDTO.getSubId());
+            }
+            if (testBankDTO.getTestType()!=null){
+                wrapper.eq("tb.test_type",testBankDTO.getTestType());
+            }
+            if (testBankDTO.getTeaId()!=null){
+                wrapper.eq("tb.tea_id",testBankDTO.getTeaId());
+            }
+            if (StringUtils.isNotBlank(testBankDTO.getTestContent())){
+                wrapper.like("tb.test_content",testBankDTO.getTestContent());
+            }
+            //编辑时根据获取的id搜索
+            if (testBankDTO.getTestId()!=null){
+                wrapper.eq("tb.test_id",testBankDTO.getTestId());
+            }
+        }
+        List<TestBankVO> testBanklist = testbankMapper.getTestbankSc(wrapper);
         for (TestBankVO testBankVO:testBanklist) {
             testBankVO.setStringAnswer(testBankVO.getAnswer());
             testBankVO.setAnswerChars(testBankVO.getAnswer().toCharArray());
@@ -138,6 +201,7 @@ public class TestbankServiceImpl extends ServiceImpl<TestbankMapper, Testbank> i
     //为试卷添加试题
     public int saveTestBank(TestBankDTO testBankDTO){
         Testbank testbank = getTestbank(testBankDTO);
+        testbank.setStatus("待审核");
         return testbankMapper.insert(testbank);
     }
 

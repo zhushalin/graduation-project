@@ -62,5 +62,7 @@ public class Testbank implements Serializable {
 
     private Date testDate;
 
+    private String status;
 
+    private String type;
 }

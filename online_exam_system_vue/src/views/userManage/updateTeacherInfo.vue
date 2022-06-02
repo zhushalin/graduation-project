@@ -43,6 +43,7 @@
                 v-model="passForm.teaName"
                 disable
                 autocomplete="off"
+                readonly="readonly"
               ></el-input>
             </el-form-item>
             <el-form-item label="性别" prop="sex">

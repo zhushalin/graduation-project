@@ -1,6 +1,7 @@
 package com.exam.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.DTO.StudentDTO;
 import com.exam.VO.LoginVO;
 import com.exam.VO.StudentVO;
@@ -94,17 +95,23 @@ public class StudentController {
     //修改密码
     @RequestMapping("/updatePassword")
     public Msg updatePass(@RequestBody Map<String, Object> params, HttpSession session){
-        String id = params.get("id").toString();
-        String newPsw = params.get("newPsw1").toString();
-        String newPsw2 = params.get("newPsw2").toString();
-        String oldPsw = params.get("oldPsw").toString();
-        Student student = studentService.getById(id);
+//        String id = params.get("id").toString();
+        String userName = params.get("userName").toString();
+        String newPsw = params.get("currentPass").toString();
+        String newPsw2 = params.get("checkPass").toString();
+        String oldPsw = params.get("password").toString();
+        QueryWrapper<Student> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("stu_username",userName);
+        Student student = studentService.getOne(queryWrapper);
         if (student != null){
             if (!oldPsw.equals(student.getStuPassword())){
                 return ResultUtil.error(400,"原始密码输入错误");
             }
             if (!newPsw.equals(newPsw2)){
                 return ResultUtil.error(400,"新密码两次输入不一致");
+            }
+            if(oldPsw.equals(newPsw2)){
+                return ResultUtil.error(400,"新密码与旧密码不能一致");
             }
             student.setStuPassword(newPsw);
             int result = studentService.updateStudent(student);

@@ -63,12 +63,12 @@
                     sortable
                     show-overflow-tooltip>
             </el-table-column>
-            <el-table-column
+            <!-- <el-table-column
                     prop="teaPassword"
                     label="教师密码"
                     sortable
                     show-overflow-tooltip>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
                     prop="teaName"
                     label="教师名称"

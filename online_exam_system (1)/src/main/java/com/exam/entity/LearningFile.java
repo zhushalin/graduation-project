@@ -1,5 +1,6 @@
 package com.exam.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,7 +24,7 @@ public class LearningFile implements Serializable {
     /**
      * id
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -35,5 +36,8 @@ public class LearningFile implements Serializable {
      * 文件名
      */
     private String name;
-
+    private String type;
+    private String titile;
+    private String content;
+    private String fileurl;
 }

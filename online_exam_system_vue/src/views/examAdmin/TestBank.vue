@@ -19,7 +19,7 @@
       <el-form-item>
         <el-select
           v-model="searchForm.testType"
-          placeholder="题目类型"
+          placeholder="题目类型"  
           clearable
         >
           <el-option label="单选题" value="1"></el-option>
@@ -127,6 +127,16 @@
           >
         </template>
       </el-table-column>
+      <el-table-column prop="type" label="知识类型" width="110" sortable>
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.type === '简单'" type="success" effect="dark"
+            >简单</el-tag
+          >
+          <el-tag v-if="scope.row.type === '重难'" type="danger" effect="dark"
+            >重难</el-tag
+          >
+        </template>
+      </el-table-column>
       <el-table-column
         prop="testContent"
         label="试题内容"
@@ -208,7 +218,7 @@
               title="确定删除该数据吗？"
               @confirm="delHandle(scope.row.testId)"
             >
-              <el-button type="text" slot="reference">删除</el-button>
+              <el-button v-if="searchForm.teaId==scope.row.teaId" type="text" slot="reference">删除</el-button>
             </el-popconfirm>
           </template>
         </template>
@@ -268,6 +278,8 @@ export default {
   },
   created() {
     this.editForm.teaId = localStorage.getItem("id");
+    this.role = localStorage.getItem("role");
+    debugger;
     if (localStorage.getItem("role") === "teacher") {
       this.searchForm.teaId = localStorage.getItem("id");
     }

@@ -35,6 +35,10 @@ public class LearningFileDTO {
      * 文件名
      */
     private String name;
+    private String type;
+    private String titile;
+    private String content;
+    private String fileurl;
 
     private Integer current;
     private Integer size;

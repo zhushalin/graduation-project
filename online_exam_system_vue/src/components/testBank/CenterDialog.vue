@@ -14,7 +14,7 @@
         label-width="100px"
         class="demo-editForm"
       >
-        <el-form-item label="科目" prop="subId" label-width="100px">
+        <el-form-item v-if="role!='student'" label="科目" prop="subId" label-width="100px">
           <el-select
             v-model="editForm.subId"
             autocomplete="off"
@@ -55,7 +55,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="试题内容" prop="testContent">
-          <el-input
+          <el-input :disabled="role=='student'"
             v-model="editForm.testContent"
             autocomplete="off"
           ></el-input>
@@ -66,7 +66,7 @@
           label-width="100px"
           v-if="!(editForm.testType === 4)"
         >
-          <el-input v-model="editForm.optionA" autocomplete="off"></el-input>
+          <el-input :disabled="role=='student'" v-model="editForm.optionA" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item
           label="选项B"
@@ -74,8 +74,8 @@
           label-width="100px"
           v-if="!(editForm.testType === 4)"
         >
-          <el-input v-model="editForm.optionB" autocomplete="off"></el-input>
-          <el-input
+          <el-input :disabled="role=='student'" v-model="editForm.optionB" autocomplete="off"></el-input>
+          <el-input :disabled="role=='student'"
             v-model="editForm.optionB"
             autocomplete="off"
             v-if="editForm.testType === 4"
@@ -86,19 +86,19 @@
           label="选项C"
           prop="optionC"
           label-width="100px"
-          v-if="!(editForm.testType === 4)"
+          v-if="editForm.optionC && !(editForm.testType === 4)"
         >
-          <el-input v-model="editForm.optionC" autocomplete="off"></el-input>
+          <el-input :disabled="role=='student'" v-model="editForm.optionC" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item
           label="选项D"
           prop="optionD"
           label-width="100px"
-          v-if="!(editForm.testType === 4)"
+          v-if="editForm.optionD && !(editForm.testType === 4)"
         >
-          <el-input v-model="editForm.optionD" autocomplete="off"></el-input>
+          <el-input :disabled="role=='student'" v-model="editForm.optionD" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="正确答案" prop="answer" label-width="100px">
+        <el-form-item v-if="role!='student' || editForm.ctj" label="正确答案" prop="answer" label-width="100px">
           <template>
             <!--添加时-->
             <el-checkbox-group
@@ -149,6 +149,52 @@
             ></el-input>
           </template>
         </el-form-item>
+        
+        <el-form-item
+          label="你的答案"
+          label-width="100px"
+          v-if="role=='student' && !editForm.ctj"
+        >
+          <el-input v-model="editForm.daan" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item  v-if="role=='admin'" label="审核结果" prop="status" label-width="100px">
+          <el-select
+            v-model="editForm.status"
+            autocomplete="off"
+            placeholder="审核结果"
+            clearable
+          >
+            <el-option
+              label="待审核"
+              value="待审核"
+            ></el-option>
+            <el-option
+              label="审核通过"
+              value="审核通过"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item   label="知识类型" prop="type" label-width="100px">
+          <el-select
+          :disabled="role=='student'"
+            v-model="editForm.type"
+            autocomplete="off"
+            placeholder="知识类型"
+            clearable
+          >
+            <el-option
+              label="简单"
+              value="简单"
+            ></el-option>
+            <el-option
+              label="重难"
+              value="重难"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        
         <el-form-item label-width="100px">
           <el-input
             v-model="editForm.teaId"
@@ -156,9 +202,15 @@
             type="hidden"
           ></el-input>
         </el-form-item>
+
         <el-form-item>
           <el-button type="info" @click="handleClose">取消</el-button>
-          <el-button type="primary" @click="submitForm('editForm')"
+          <el-button type="errot" v-if="editForm.scid" @click="qxshoucang('editForm')">取消收藏</el-button>
+          <el-button type="warn" v-if="!editForm.scid"  @click="shoucang('editForm')">收藏</el-button>
+          <el-button v-if="role=='student' && !editForm.ctj" type="primary" @click="lianxi('editForm')"
+            >立即提交</el-button
+          >
+          <el-button v-if="role!='student'" type="primary" @click="submitForm('editForm')"
             >立即提交</el-button
           >
         </el-form-item>
@@ -174,6 +226,81 @@ export default {
 
   data() {
     return {
+      role:localStorage.getItem("role"),
+      shoucang(formName){
+        var editForm = this.editForm;
+          this.$axios
+            .post(
+              "/favorite/add",
+              {studentId:localStorage.getItem("id"),type:2,questionId:editForm.testId}
+            )
+            .then((res) => {
+              this.$message({
+                showClose: true,
+                message: "收藏成功!",
+                type: "success",
+              });
+              this.centerDialogVisible = false;
+              this.$parent.resetForm(formName);
+            });
+
+      },
+      qxshoucang(formName){
+        var editForm = this.editForm;
+          this.$axios
+            .post(
+              "/favorite/delete",
+              {ids:[this.editForm.scid]}
+            )
+            .then((res) => {
+              this.$message({
+                showClose: true,
+                message: "取消收藏!",
+                type: "success",
+              });
+              this.centerDialogVisible = false;
+              this.$parent.resetForm(formName);
+            });
+
+      },
+      lianxi(){
+        var editForm = this.editForm;
+        var stringAnswer = editForm.stringAnswer;
+        var answer = editForm.answer;
+        var bloe = false;
+        debugger;
+        //单选
+        if(editForm.testType==1){
+          if(editForm.daan ==stringAnswer ){bloe =true}
+        }else if(editForm.testType==2){ // 多选
+          if(answer.indexOf(editForm.daan)>=0){bloe =true}
+        }else if(editForm.testType==3){ // 判断题
+          if(editForm.daan ==stringAnswer ){bloe =true}
+        }else if(editForm.testType==4){ // 填空题
+          if(editForm.daan ==stringAnswer ){bloe =true}
+        }
+        debugger;
+        if(bloe){
+          this.$message({
+            showClose: true,
+            message: "恭喜你，回答正确!",
+            type: "success",
+          });
+        }else{
+          this.$message({
+            showClose: true,
+            message: "对不起，回答错误!",
+            type: "error",
+          });
+          this.$axios
+            .post(
+              "/wrong/add",
+              {studentId:localStorage.getItem("id"),questionId:editForm.testId}
+            )
+            .then((res) => {
+            });
+        }
+      },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {

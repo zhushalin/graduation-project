@@ -24,6 +24,8 @@ import java.util.List;
 @Component
 public interface TestbankMapper extends BaseMapper<Testbank> {
     List<TestBankVO> getTestBanklist(@Param(Constants.WRAPPER) Wrapper wrapper);
+    List<TestBankVO> getTestBanklistCtj(@Param(Constants.WRAPPER) Wrapper wrapper);
+    List<TestBankVO> getTestbankSc(@Param(Constants.WRAPPER) Wrapper wrapper);
 
     List<TestBankVO> getTestBanklist1(@Param(Constants.WRAPPER) Wrapper wrapper,@Param("tpId") Integer tpId);
 

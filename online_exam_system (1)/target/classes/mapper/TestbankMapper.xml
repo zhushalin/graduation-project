@@ -13,6 +13,8 @@
         <result column="option_c" jdbcType="VARCHAR" property="optionC"/>
         <result column="option_d" jdbcType="VARCHAR" property="optionD"/>
         <result column="answer" jdbcType="VARCHAR" property="answer"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
         <result column="score" javaType="INTEGER" property="score"/>
     </resultMap>
 
@@ -25,7 +27,7 @@
      </select>-->
 
     <select id="getTestBanklist" resultMap="TestBankVO">
-        select tea_id, test_id, test_date,s.sub_id, sub_name,
+        select tea_id, test_id, test_date,s.sub_id, sub_name,tb.status,tb.type,
         test_type,test_content,option_a,option_b,option_c,option_d,answer,tb.score
         from testbank tb, subject s
         where tb.sub_id = s.sub_id
@@ -34,8 +36,28 @@
         </if>
     </select>
 
+    <select id="getTestBanklistCtj" resultMap="TestBankVO">
+        select tea_id, test_id, test_date,s.sub_id, sub_name,tb.status,tb.type,
+        test_type,test_content,option_a,option_b,option_c,option_d,answer,tb.score
+        from testbank tb, subject s, wrong_question wq
+        where tb.sub_id = s.sub_id and wq.question_id = tb.test_id
+        <if test="ew.emptyOfWhere == false">
+            and ${ew.sqlSegment}
+        </if>
+    </select>
+
+    <select id="getTestbankSc" resultMap="TestBankVO">
+        select tea_id, test_id, test_date,s.sub_id, sub_name,tb.status,tb.type,
+        test_type,test_content,option_a,option_b,option_c,option_d,answer,tb.score
+        from testbank tb, subject s, favorite f
+        where tb.sub_id = s.sub_id and f.question_id = tb.test_id
+        <if test="ew.emptyOfWhere == false">
+            and ${ew.sqlSegment}
+        </if>
+    </select>
+
     <select id="getTestBanklist1" resultMap="TestBankVO">
-        select tea_id, test_id, test_date,s.sub_id, sub_name,
+        select tea_id, test_id, test_date,s.sub_id, sub_name,tb.status,tb.type,
         test_type,test_content,option_a,option_b,option_c,option_d,answer
         from testbank tb, subject s
         where tb.sub_id = s.sub_id
@@ -55,6 +77,7 @@
                option_b,
                option_c,
                option_d,
+               tb.status,
                answer
         from testbank tb
         where test_id

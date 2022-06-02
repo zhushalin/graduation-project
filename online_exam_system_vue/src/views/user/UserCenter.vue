@@ -119,7 +119,7 @@
                         this.passForm.role = localStorage.getItem("role")
 
                         console.log(this.passForm)
-                        this.$axios.post('/User/updatePass', this.passForm).then(res => {
+                        this.$axios.post('/Student/updatePassword', this.passForm).then(res => {
                                 this.$message({
                                     type:"success",
                                     message:"修改完成，请重新登录！",

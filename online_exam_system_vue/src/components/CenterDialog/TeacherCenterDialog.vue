@@ -25,7 +25,7 @@
               v-for="col in teaData"
               :label="col.colName"
               :value="col.colName"
-              :key="maj.majorId"
+              :key="col.majorId"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -58,6 +58,8 @@
             autocomplete="off"
             placeholder="若教师密码不设置，默认为123456"
             clearable
+            type="password"
+            readonly="readonly"
           ></el-input>
         </el-form-item>
 

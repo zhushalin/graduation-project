@@ -1,6 +1,7 @@
 package com.exam.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.DTO.ScoreDTO;
 import com.exam.DTO.TestBankDTO;
@@ -93,6 +94,49 @@ public class TplistController {
         return ResultUtil.success(tpListVO);
     }
 
+    @RequestMapping("/getTplistSuiji")
+    public Msg getTplistSuiji(@RequestBody TestBankDTO testBankDTO){
+        List<TestBankVO> tplistTest = testbankService.getTestBanklist(testBankDTO);
+        TPListVO tpListVO = new TPListVO();
+        ArrayList<TBVO> list1 = new ArrayList<>();
+        ArrayList<TBVO> list2 = new ArrayList<>();
+        ArrayList<TBVO> list3 = new ArrayList<>();
+        int number = 0;
+        for (TestBankVO testBankVO : tplistTest) {
+            TBVO tbvo = new TBVO();
+            tbvo.setAnswered(false);
+            tbvo.setIsanswer(false);
+            tbvo.setTestSort(number++);
+            BeanUtils.copyProperties(testBankVO,tbvo);
+            if (testBankVO.getTestType()==1){
+                list1.add(tbvo);
+            }else if(testBankVO.getTestType()==2){
+                list2.add(tbvo);
+            }else if(testBankVO.getTestType()==3){
+                list3.add(tbvo);
+            }
+        }
+
+        int number2 = 0;
+        for (TBVO tbvo : list1) {
+            tbvo.setTestSort(number2);
+            number2++;
+        }
+        for (TBVO tbvo : list2) {
+            tbvo.setTestSort(number2);
+            number2++;
+        }
+        for (TBVO tbvo : list3) {
+            tbvo.setTestSort(number2);
+            number2++;
+        }
+        tpListVO.setRadioList(list1);
+        tpListVO.setMultiList(list2);
+        tpListVO.setJudgeList(list3);
+        System.out.println("tplistvo===================>");
+        System.out.println(tpListVO);
+        return ResultUtil.success(tpListVO);
+    }
     /**
      * 根据套题id查询试卷结果
      * @param scoreDTO

@@ -148,7 +148,7 @@ export default {
         editType: "",
         title: "",
         content: "",
-        adminId: 1,
+        adminId: 1001,
       },
       //设置弹框属性
       addDialog: {

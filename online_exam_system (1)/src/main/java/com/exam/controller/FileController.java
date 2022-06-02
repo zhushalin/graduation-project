@@ -1,5 +1,6 @@
 package com.exam.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.common.Msg;
 import com.exam.common.ResultUtil;
 import com.exam.entity.LearningFile;
@@ -50,6 +51,13 @@ public class FileController {
             //生成新的文件路径
             String newFileUrl = savePath + fileName;
             File saveFile = new File(newFileUrl);
+            if (!saveFile.exists())
+            {
+                if (!saveFile.getParentFile().exists())
+                {
+                    saveFile.getParentFile().mkdirs();
+                }
+            }
             //将文件上传到保存路径中
             try {
                 file.transferTo(saveFile);
@@ -57,9 +65,10 @@ public class FileController {
                 e.printStackTrace();
                 return ResultUtil.error(400, "上传出错");
             }
-            return ResultUtil.success(fileName);
+            return ResultUtil.success("http://localhost:8085/upload/"+fileName);
         }
     }
+
     /**
      * 下载学习资料
      * @return
@@ -101,6 +110,18 @@ public class FileController {
     public Msg getAllByPage(int current){
         //查询所有
         List<LearningFile> list = fileService.list();
+        //分页
+        Page page = new Page(list.size(), current);
+        page.build(list);
+        return ResultUtil.success(page);
+    }
+
+    @GetMapping("/getAll2/page")
+    public Msg getAll2ByPage(int current){
+        //查询所有
+        QueryWrapper<LearningFile> wrapper = new QueryWrapper<>();
+        wrapper.eq("type","2");
+        List<LearningFile> list = fileService.list(wrapper);
         //分页
         Page page = new Page(list.size(), current);
         page.build(list);
